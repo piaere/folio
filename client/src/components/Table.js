@@ -6,41 +6,51 @@ const Table = () => {
   const [totalValue, setTotalValue] = useState(0);
 
   useEffect(() => {
-    const data = [
-      { name: "ETH", qty: 20, price: 1200 },
-      { name: "BTC", qty: 1, price: 21000 },
-      { name: "SOL", qty: 50, price: 100 },
-    ];
-    setCurrentPortfolio(data);
+    fetch("/get-data")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data.data);
+        setCurrentPortfolio(data.data);
+        let sum = 0;
+        data.data.forEach((coin) => {
+          sum += coin.qty * coin.price;
+        });
+        setTotalValue(sum);
+      })
+      .catch((error) => console.log("Error: ", error));
+  }, []);
 
-    let sum = 0;
-    data.forEach((coin) => {
-      sum += coin.qty * coin.price;
-    });
-    setTotalValue(sum);
-  }, [setCurrentPortfolio]);
+//   useEffect(() => {
+//     fetch("/get-crypto")
+//       .then((res) => res.json())
+//       .then((data) => {
+//         console.log(data.data);
+//       })
+//       .catch((error) => console.log("Error: ", error));
+//   }, []);
 
   currentPortfolio && console.log(currentPortfolio);
 
   return (
     <Main>
-      <Total>Total Value: ${totalValue}</Total>
+      <Total>$ {totalValue.toLocaleString("en-US")}</Total>
       <Folio>
         <Tbody>
           <Tr>
-            <Th>COIN</Th>
-            <Th>QTY</Th>
-            <Th>MARKET PRICE</Th>
-            <Th>VALUE</Th>
+            <Th>Coin</Th>
+            <Th>Qty</Th>
+            <Th>Price</Th>
+            <Th>Value (USD)</Th>
           </Tr>
           <>
             {currentPortfolio &&
               currentPortfolio.map((coin) => {
+                const total = coin.price * coin.qty;
                 return (
                   <Tr>
                     <Td>{coin.name}</Td> <Td>{coin.qty}</Td>
-                    <Td>{coin.price}</Td>
-                    <Td>{coin.price * coin.qty}</Td>
+                    <Td>{coin.price.toLocaleString("en-US")}</Td>
+                    <Td>{total.toLocaleString("en-US")}</Td>
                   </Tr>
                 );
               })}
@@ -60,21 +70,21 @@ const Main = styled.main`
 
 const Total = styled.div`
   padding-bottom: 1em;
-  font-size: 1.5em;
+  font-size: 2em;
 `;
 const Folio = styled.table`
   font-size: 1.5em;
   width: 50%;
 `;
 const Th = styled.th`
-  background-color: white;
+  background-color: teal;
   color: black;
   padding: 2%;
 `;
 const Tbody = styled.tbody``;
 const Tr = styled.tr``;
 const Td = styled.td`
-  border: solid grey 1px;
+  border: solid teal 0.5px;
   padding: 2%;
 `;
 

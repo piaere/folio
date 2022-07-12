@@ -15,13 +15,13 @@ const Main = styled.main`
   height: 100vh;
   background-color: black;
   color: white;
-  font-family: "Xanh Mono", monospace;
+  font-family: 'Syne Mono', monospace;
 `;
 
 const Header = styled.header`
   padding-top: 10vh;
   text-align: center;
-  font-size: 2em;
+  font-size: 3em;
 `;
 
 export default App;
